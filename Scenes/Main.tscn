@@ -1,0 +1,159 @@
+[gd_scene load_steps=12 format=3 uid="uid://cvxas7kvs1yl7"]
+
+[ext_resource type="Script" path="res://Scripts/GameManager.gd" id="1_clj2t"]
+[ext_resource type="PackedScene" uid="uid://dabwk5yivbwqb" path="res://Scenes/Player.tscn" id="2_e5q6u"]
+[ext_resource type="Texture2D" uid="uid://bxb2hhcs4xy1h" path="res://icon.svg" id="3_gfx5r"]
+[ext_resource type="Script" path="res://Scripts/Enemy.gd" id="4_iqytd"]
+[ext_resource type="Texture2D" uid="uid://cprucmnyyaj51" path="res://square.png" id="5_8staa"]
+[ext_resource type="PackedScene" uid="uid://dl0pxilecw0ob" path="res://Scenes/Encounter.tscn" id="6_jo3h4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gk87y"]
+radius = 63.2624
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f0blk"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ohx88"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lycq0"]
+bg_color = Color(0.490196, 0.490196, 0.490196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7lbyb"]
+bg_color = Color(1, 0, 0, 1)
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("rumorBar")]
+script = ExtResource("1_clj2t")
+rumorBar = NodePath("RumorUI/RumorBar")
+
+[node name="Overworld" type="Node2D" parent="."]
+
+[node name="Player" parent="Overworld" instance=ExtResource("2_e5q6u")]
+
+[node name="Enemy" type="Sprite2D" parent="Overworld"]
+self_modulate = Color(0.752941, 0.235294, 0.211765, 1)
+position = Vector2(196, -324)
+scale = Vector2(1.01483, 1)
+texture = ExtResource("3_gfx5r")
+script = ExtResource("4_iqytd")
+interact_range = 400.0
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Overworld/Enemy"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Overworld/Enemy/StaticBody2D"]
+shape = SubResource("CircleShape2D_gk87y")
+
+[node name="Panel" type="Panel" parent="Overworld/Enemy"]
+show_behind_parent = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -35.0
+offset_top = -64.0
+offset_right = 360.0
+offset_bottom = 312.0
+grow_horizontal = 0
+
+[node name="Combat Button" type="Button" parent="Overworld/Enemy/Panel"]
+layout_mode = 0
+offset_left = 146.448
+offset_top = 167.0
+offset_right = 257.448
+offset_bottom = 207.0
+text = "Combat"
+
+[node name="Accuse Button" type="Button" parent="Overworld/Enemy/Panel"]
+layout_mode = 0
+offset_left = 146.448
+offset_top = 227.0
+offset_right = 257.448
+offset_bottom = 267.0
+text = "Accuse"
+
+[node name="Wall" type="Sprite2D" parent="Overworld"]
+position = Vector2(827, -914)
+scale = Vector2(151.48, 9.72)
+texture = ExtResource("5_8staa")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Overworld/Wall"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Overworld/Wall/StaticBody2D"]
+shape = SubResource("RectangleShape2D_f0blk")
+
+[node name="Wall2" type="Sprite2D" parent="Overworld"]
+position = Vector2(827, 862)
+scale = Vector2(152.56, 9.72)
+texture = ExtResource("5_8staa")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Overworld/Wall2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Overworld/Wall2/StaticBody2D"]
+shape = SubResource("RectangleShape2D_f0blk")
+
+[node name="Wall3" type="Sprite2D" parent="Overworld"]
+position = Vector2(-688, -53)
+scale = Vector2(9.71999, 85.92)
+texture = ExtResource("5_8staa")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Overworld/Wall3"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Overworld/Wall3/StaticBody2D"]
+shape = SubResource("RectangleShape2D_f0blk")
+
+[node name="Wall4" type="Sprite2D" parent="Overworld"]
+position = Vector2(2282, -53)
+scale = Vector2(9.71999, 83.72)
+texture = ExtResource("5_8staa")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Overworld/Wall4"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Overworld/Wall4/StaticBody2D"]
+shape = SubResource("RectangleShape2D_f0blk")
+
+[node name="Indicator" type="Sprite2D" parent="Overworld"]
+visible = false
+self_modulate = Color(0, 1, 0, 1)
+material = SubResource("CanvasItemMaterial_ohx88")
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_gfx5r")
+
+[node name="Encounter" parent="." instance=ExtResource("6_jo3h4")]
+visible = false
+
+[node name="RumorUI" type="CanvasLayer" parent="."]
+
+[node name="RumorBar" type="ProgressBar" parent="RumorUI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 182.0
+offset_top = 29.0
+offset_right = -182.0
+offset_bottom = 56.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_lycq0")
+theme_override_styles/fill = SubResource("StyleBoxFlat_7lbyb")
+step = 1.0
+value = 50.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="RumorUI/RumorBar"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -51.0
+offset_top = -3.0
+offset_right = 51.0
+offset_bottom = 23.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+text = "Rumor"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="Overworld/Enemy/Panel/Combat Button" to="Overworld/Enemy" method="_on_combat_button_pressed"]
+[connection signal="pressed" from="Overworld/Enemy/Panel/Accuse Button" to="Overworld/Enemy" method="_on_accuse_button_pressed"]

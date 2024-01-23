@@ -1,0 +1,157 @@
+[gd_scene load_steps=8 format=3 uid="uid://dl0pxilecw0ob"]
+
+[ext_resource type="Script" path="res://Scripts/EncounterManager.gd" id="1_lr37o"]
+[ext_resource type="Script" path="res://Scripts/EncounterPlayerIcon.gd" id="2_0a7fh"]
+[ext_resource type="Texture2D" uid="uid://bxb2hhcs4xy1h" path="res://icon.svg" id="3_c1q8e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pbps6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mj356"]
+bg_color = Color(0, 1, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o2c87"]
+size = Vector2(124, 124)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3npho"]
+size = Vector2(132, 124)
+
+[node name="Encounter" type="CanvasLayer"]
+script = ExtResource("1_lr37o")
+
+[node name="BG" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogueBG" type="ColorRect" parent="BG"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -202.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.6, 0.6, 0.6, 1)
+
+[node name="GridContainer" type="GridContainer" parent="BG/DialogueBG"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -91.5
+offset_top = -33.0
+offset_right = 91.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 50
+theme_override_constants/v_separation = 40
+columns = 2
+
+[node name="AttackButton" type="Button" parent="BG/DialogueBG/GridContainer"]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Attack"
+
+[node name="EndCombatButton" type="Button" parent="BG/DialogueBG/GridContainer"]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Give Up"
+icon_alignment = 1
+
+[node name="ItemButton" type="Button" parent="BG/DialogueBG/GridContainer"]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Use Item"
+
+[node name="InvestigateButton" type="Button" parent="BG/DialogueBG/GridContainer"]
+custom_minimum_size = Vector2(300, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Investigate"
+
+[node name="EnemyHealthBar" type="ProgressBar" parent="BG"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 63.0
+offset_top = -60.0
+offset_right = 301.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_pbps6")
+theme_override_styles/fill = SubResource("StyleBoxFlat_mj356")
+max_value = 3.0
+value = 1.0
+show_percentage = false
+
+[node name="MinigameBG" type="ColorRect" parent="BG"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 288.0
+offset_top = 80.0
+offset_right = -288.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="PlayerSprite" type="Sprite2D" parent="BG/MinigameBG" node_paths=PackedStringArray("bg", "collider")]
+position = Vector2(291, 397)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_c1q8e")
+script = ExtResource("2_0a7fh")
+bg = NodePath("..")
+move_speed = 5.0
+collider = NodePath("PlayerArea/CollisionShape2D")
+
+[node name="PlayerArea" type="Area2D" parent="BG/MinigameBG/PlayerSprite"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BG/MinigameBG/PlayerSprite/PlayerArea"]
+shape = SubResource("RectangleShape2D_o2c87")
+
+[node name="GoalIcon" type="Sprite2D" parent="BG/MinigameBG"]
+modulate = Color(0.368627, 1, 0.364706, 1)
+position = Vector2(288, 100)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_c1q8e")
+
+[node name="GoalArea" type="Area2D" parent="BG/MinigameBG/GoalIcon"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BG/MinigameBG/GoalIcon/GoalArea"]
+shape = SubResource("RectangleShape2D_3npho")
+
+[node name="ObstacleIcon" type="Sprite2D" parent="BG/MinigameBG"]
+modulate = Color(1, 0.219608, 0, 1)
+position = Vector2(289, 250)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_c1q8e")
+
+[node name="ObstacleArea" type="Area2D" parent="BG/MinigameBG/ObstacleIcon"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BG/MinigameBG/ObstacleIcon/ObstacleArea"]
+shape = SubResource("RectangleShape2D_3npho")
+
+[connection signal="pressed" from="BG/DialogueBG/GridContainer/AttackButton" to="." method="_on_attack_button_pressed"]
+[connection signal="pressed" from="BG/DialogueBG/GridContainer/EndCombatButton" to="." method="_on_end_combat_pressed"]
+[connection signal="gui_input" from="BG/MinigameBG" to="BG/MinigameBG/PlayerSprite" method="_on_minigame_bg_gui_input"]
+[connection signal="visibility_changed" from="BG/MinigameBG" to="BG/MinigameBG/PlayerSprite" method="_on_minigame_bg_visibility_changed"]
+[connection signal="player_hit_goal" from="BG/MinigameBG/PlayerSprite" to="." method="_on_player_sprite_player_hit_goal"]
+[connection signal="player_hurt" from="BG/MinigameBG/PlayerSprite" to="." method="_on_player_sprite_player_hurt"]
+[connection signal="area_entered" from="BG/MinigameBG/PlayerSprite/PlayerArea" to="BG/MinigameBG/PlayerSprite" method="_on_player_area_area_entered"]
